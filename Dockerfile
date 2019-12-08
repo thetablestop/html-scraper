@@ -2,8 +2,6 @@
 
 FROM node:8-slim
 
-ENV NODE_ENV Production
-
 # Install dependencies
 
 ## See https://crbug.com/795759
@@ -27,13 +25,10 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
 # Install global NPM dependencies
 RUN npm install -g yarn
 
-# Install app dependencies
-WORKDIR /app
-COPY package.json .
-RUN yarn install --production
-
-# Copy source
-COPY src/. /app/src
+# Copy built code
+COPY package*.json ./
+COPY node_modules/. node_modules/
+COPY src/. src/
 
 ## Install puppeteer so it can be required by user code that gets run in
 ## server.js. Cache bust so we always get the latest version of puppeteer when
@@ -50,11 +45,8 @@ RUN chmod 644 /etc/ssl/*
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video,ssl-cert pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /app
-
-# Allow pptruser to run node on 443
-RUN apt-get update && apt-get -y install libcap2-bin
-RUN setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/node
+    && chown -R pptruser:pptruser /app \
+    && chown -R appusr:appusr /mnt/nodeshared
 
 # Run app as non privileged.
 USER pptruser

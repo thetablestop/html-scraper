@@ -18,17 +18,16 @@
         "body-parser": "^1.19.0",
         "chalk": "^3.0.0",
         "cors": "^2.8.5",
-        "deepmerge": "^4.2.2",
         "esm": "^3.2.25",
         "express": "^4.17.1",
-        "moment": "^2.24.0",
-        "puppeteer": "^2.0.0"
+        "moment": "^2.24.0"
     },
     "devDependencies": {
         "husky": "^3.1.0",
         "nodemon": "^2.0.1",
         "prettier": "^1.19.1",
-        "pretty-quick": "^2.0.1"
+        "pretty-quick": "^2.0.1",
+        "puppeteer": "^2.0.0"
     },
     "prettier": {
         "printWidth": 140,
