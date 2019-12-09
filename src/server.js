@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import bodyParser from 'body-parser';
-import { HelloService } from './hello-service.js';
 
 const app = express();
 const router = express.Router();
