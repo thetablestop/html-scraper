@@ -24,6 +24,6 @@ yarn start
 const axios = require('axios').default;
 const url = 'https://www.google.com';
 const selector = '#hptl > a:nth-child(1)';
-const result = await axios.get(`http://localhost:3000/api/scrape?url=${url}&selector=${selector}`;
+const result = await axios.get(`http://localhost:3002/api/scrape?url=${url}&selector=${selector}`;
 console.log(result); //'About'
 ```

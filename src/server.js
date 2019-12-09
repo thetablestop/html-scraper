@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import bodyParser from 'body-parser';
+import chalk from 'chalk';
+import moment from 'moment';
+import { PuppeteerService } from './puppeteer-service.js';
 
 const app = express();
 const router = express.Router();
@@ -20,57 +23,22 @@ app.use(bodyParser.urlencoded({ extended: true }))
         <h2>Version: ${pkg.version}</h2>`);
     });
 
-const port = process.env.NODE_PORT || 3000;
+const port = process.env.NODE_PORT || 3002;
 httpServer.listen(port);
 console.log(`Listening on http://localhost:${port}`);
 
 // Setup routes
 router.get('/scrape', async (req, res) => {
-    let browser;
-    let result;
-    let error = '';
     try {
-        if (!req.query.url) {
-            error += ` url is required;`;
-        }
-        if (!req.query.selector) {
-            error += ` selector is required;`;
-        }
-
-        browser = await puppeteer.launch({
-            args: ['--no-sandbox'],
-            headless: settings.headless
+        const pupSvc = new PuppeteerService();
+        const result = await pupSvc.eval(req.url, req.selector, (document, selector) => {
+            return {
+                content: document.querySelector(selector).innerText.trim()
+            };
         });
-        if (!browser) {
-            error = `Unable to launch chromium browser`;
-        }
 
-        if (browser && req.query.url && req.query.selector) {
-            const page = await browser.newPage();
-            await page.goto(req.query.url);
-            await page.waitForSelector(req.query.selector);
-
-            result = await page.evaluate(q => {
-                try {
-                    const elem = document.querySelector(q.selector);
-                    return {
-                        content: elem.innerText.trim()
-                    };
-                } catch (err) {
-                    return {
-                        error: err
-                    };
-                }
-            }, req.query);
-            await browser.close();
-        }
-
-        if (result && result.error) {
+        if (result.error) {
             res.status(400).send(result);
-        } else if (error) {
-            res.status(400).send({
-                error: error
-            });
         } else {
             res.send(result);
         }
