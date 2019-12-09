@@ -51,7 +51,7 @@ RUN chmod 644 /etc/ssl/*
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video,ssl-cert pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R appusr:appusr /mnt/nodeshared
+    && chown -R pptruser:pptruser /mnt/nodeshared
 
 # Run app as non privileged.
 USER pptruser
