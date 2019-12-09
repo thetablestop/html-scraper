@@ -3,8 +3,6 @@ stages:
   steps:
   - applyYamlConfig:
       path: ./deployment.yml
-  - applyYamlConfig:
-      path: ./deploy-ingress.yml
 notification:
   recipients:
   - recipient: builds
