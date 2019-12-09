@@ -25,6 +25,12 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
 # Install global NPM dependencies
 RUN npm install -g yarn
 
+# Setup mount directory
+RUN mkdir -p /mnt/nodeshared
+
+# Create and change to the app directory.
+WORKDIR /home/puppeteer/app
+
 # Copy built code
 COPY package*.json ./
 COPY node_modules/. node_modules/
@@ -45,7 +51,6 @@ RUN chmod 644 /etc/ssl/*
 RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video,ssl-cert pptruser \
     && mkdir -p /home/pptruser/Downloads \
     && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /app \
     && chown -R appusr:appusr /mnt/nodeshared
 
 # Run app as non privileged.
