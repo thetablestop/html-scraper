@@ -25,7 +25,7 @@ spec:
         - name: NODE_PORT
           value: "8080"
         - name: HEADLESS
-          value: true
+          value: "true"
         ports:
         - containerPort: 8080
           name: http
