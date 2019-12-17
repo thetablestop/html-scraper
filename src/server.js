@@ -35,7 +35,9 @@ router.get('/scrape', async (req, res) => {
             return {
                 content: document.querySelector(selector).innerText.trim()
             };
-        });
+        const result = await pupSvc.eval(req.url, req.selector, (document, selector) => (
+               { content: document.querySelector(selector).innerText.trim() }
+        ));
 
         if (result.error) {
             res.status(400).send(result);
