@@ -22,9 +22,6 @@ RUN apt-get update && apt-get install -y wget --no-install-recommends \
     && apt-get purge --auto-remove -y curl \
     && rm -rf /src/*.deb
 
-# Install global NPM dependencies
-RUN npm install -g yarn
-
 # Setup mount directory
 RUN mkdir -p /mnt/nodeshared
 
@@ -40,7 +37,7 @@ COPY src/. src/
 ## server.js. Cache bust so we always get the latest version of puppeteer when
 ## building the image.
 ARG CACHEBUST=1
-RUN yarn add puppeteer
+RUN npm install -g puppeteer
 
 # Copy certs
 COPY certs/thetablestop.* /etc/ssl/
