@@ -2,7 +2,9 @@ stages:
 - name: Deploy
   steps:
   - applyYamlConfig:
-      path: ./deployment.yml
+      path: ./.service.yml
+  - applyYamlConfig:
+      path: ./.deployment.yml
 notification:
   recipients:
   - recipient: builds

@@ -37,7 +37,7 @@ COPY src/. src/
 ## server.js. Cache bust so we always get the latest version of puppeteer when
 ## building the image.
 ARG CACHEBUST=1
-RUN npm install -g puppeteer
+RUN npm install -g puppeteer --unsafe-perm=true
 
 # Copy certs
 COPY certs/thetablestop.* /etc/ssl/
