@@ -31,13 +31,9 @@ console.log(`Listening on http://localhost:${port}`);
 router.get('/scrape', async (req, res) => {
     try {
         const pupSvc = new PuppeteerService();
-        const result = await pupSvc.eval(req.url, req.selector, (document, selector) => {
-            return {
-                content: document.querySelector(selector).innerText.trim()
-            };
-        const result = await pupSvc.eval(req.url, req.selector, (document, selector) => (
-               { content: document.querySelector(selector).innerText.trim() }
-        ));
+        const result = await pupSvc.eval(req.url, req.selector, (document, selector) => ({
+            content: document.querySelector(selector).innerText.trim()
+        }));
 
         if (result.error) {
             res.status(400).send(result);
