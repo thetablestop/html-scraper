@@ -41,10 +41,7 @@ router.get('/scrape', async (req, res) => {
             res.send(result);
         }
     } catch (err) {
-        console.log(chalk.red(`${moment().format()}: ${err}`));
-        if (browser) {
-            await browser.close();
-        }
+        console.error(chalk.red(`${moment().format()}: ${err}`));
         res.sendStatus(500);
     }
 });
