@@ -2,9 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import bodyParser from 'body-parser';
-import chalk from 'chalk';
-import moment from 'moment';
-import { PuppeteerService } from './puppeteer-service.js';
+import * as awilix from 'awilix';
+import { PuppeteerService } from './services/puppeteer-service.js';
+import { PuppeteerController } from './controllers/puppeteer-controller.js';
+
+const container = awilix.createContainer({
+    injectionMode: awilix.InjectionMode.PROXY
+});
+
+container.register({
+    puppeteerController: awilix.asClass(PuppeteerController),
+    puppeteerService: awilix.asClass(PuppeteerService)
+});
 
 const app = express();
 const router = express.Router();
@@ -28,20 +37,7 @@ httpServer.listen(port);
 console.log(`Listening on http://localhost:${port}`);
 
 // Setup routes
-router.get('/scrape', async (req, res) => {
-    try {
-        const pupSvc = new PuppeteerService();
-        const result = await pupSvc.eval(req.url, req.selector, (document, selector) => ({
-            content: document.querySelector(selector).innerText.trim()
-        }));
-
-        if (result.error) {
-            res.status(400).send(result);
-        } else {
-            res.send(result);
-        }
-    } catch (err) {
-        console.error(chalk.red(`${moment().format()}: ${err}`));
-        res.sendStatus(500);
-    }
-});
+router
+    .get('/scrape/text', async (req, res) => await container.cradle.puppeteerController.scrapeText(req, res))
+    .get('/scrape/html', async (req, res) => await container.cradle.puppeteerController.scrapeHtml(req, res))
+    .get('/scrape/link', async (req, res) => await container.cradle.puppeteerController.scrapeLink(req, res));

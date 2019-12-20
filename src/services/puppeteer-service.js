@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 
 export class PuppeteerService {
-    async eval(url, selector, parseFunc) {
+    async eval(url, selector, evalFunc) {
         let error = '';
         if (!url) {
             error += ` url is required;`;
@@ -9,8 +9,8 @@ export class PuppeteerService {
         if (!selector) {
             error += ` selector is required;`;
         }
-        if (!parseFunc) {
-            throw `parseFunc is required`;
+        if (!evalFunc) {
+            throw `evalFunc is required`;
         }
 
         const browser = await puppeteer.launch({
@@ -21,20 +21,11 @@ export class PuppeteerService {
             error = `Unable to launch chromium browser`;
         }
 
-        if (browser && url && parseFunc) {
+        if (browser && url && evalFunc) {
             const page = await browser.newPage();
             await page.goto(url);
             await page.waitForSelector(selector);
-
-            const result = await page.evaluate(sel => {
-                try {
-                    return parseFunc(document, sel);
-                } catch (err) {
-                    return {
-                        error: err
-                    };
-                }
-            }, selector);
+            const result = await page.evaluate(evalFunc, selector);
             await browser.close();
             return result;
         }

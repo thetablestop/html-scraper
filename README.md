@@ -20,10 +20,21 @@ yarn start
 
 ## Usage
 
-```
+```js
 const axios = require('axios').default;
-const url = 'https://www.google.com';
-const selector = '#hptl > a:nth-child(1)';
-const result = await axios.get(`http://localhost:3002/api/scrape?url=${url}&selector=${selector}`;
-console.log(result); //'About'
+
+/* Text */
+const url = encodeURIComponent('https://boardgamegeek.com/boardgame/264220/tainted-grail-fall-avalon');
+const selector = encodeURIComponent('div.game-header-title-info h1 a');
+const result = await axios.get(`http://localhost:3002/api/scrape/text?url=${url}&selector=${selector}`);
+
+/* HTML */
+const url = encodeURIComponent('https://boardgamegeek.com/boardgame/264220/tainted-grail-fall-avalon');
+const selector = encodeURIComponent('article.game-description-body p');
+const result = await axios.get(`http://localhost:3002/api/scrape/html?url=${url}&selector=${selector}`);
+
+/* Link */
+const url = encodeURIComponent('https://boardgamegeek.com/browse/boardgame');
+const selector = encodeURIComponent('#collectionitems td:nth-child(3) a');
+const result = await axios.get(`http://localhost:3002/api/scrape/link?url=${url}&selector=${selector}`);
 ```
