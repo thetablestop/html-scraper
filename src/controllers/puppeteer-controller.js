@@ -44,7 +44,7 @@ export class PuppeteerController {
             const results = await this.service.eval(req.query.url, req.query.selector, sel =>
                 Array.from(document.querySelectorAll(sel)).map(x => ({
                     content: x.innerText.trim(),
-                    anchor: x.getAttribute('href')
+                    link: x.getAttribute('href')
                 }))
             );
             if (results.error) {
