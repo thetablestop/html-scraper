@@ -24,7 +24,14 @@ export class PuppeteerService {
         if (browser && url && evalFunc) {
             const page = await browser.newPage();
             await page.goto(url);
-            await page.waitForSelector(selector);
+            try {
+                await page.waitForSelector(selector);
+            } catch (err) {
+                console.error(err);
+                return {
+                    error: `Error encountered waiting for the selector: ${err.message}`
+                };
+            }
             const result = await page.evaluate(evalFunc, selector);
             await browser.close();
             return result;
