@@ -34,7 +34,7 @@ export class PuppeteerController {
                                     content: x.innerText.trim(),
                                     link: x.getAttribute('href')
                                 };
-                            case '':
+                            case 'html':
                                 return {
                                     content: x.innerHTML.trim()
                                 };
