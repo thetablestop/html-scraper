@@ -24,7 +24,14 @@ export class PuppeteerService {
         if (browser && url && evalFunc) {
             const page = await browser.newPage();
             await page.goto(url);
-            await page.waitForSelector(selector);
+            if (Array.isArray(selector)) {
+                for (const sel of selector) {
+                    await page.waitForSelector(sel.selector);
+                }
+            } else {
+                await page.waitForSelector(selector);
+            }
+
             const result = await page.evaluate(evalFunc, selector);
             await browser.close();
             return result;
