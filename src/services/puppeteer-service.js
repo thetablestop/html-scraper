@@ -24,17 +24,33 @@ export class PuppeteerService {
         if (browser && url && evalFunc) {
             const page = await browser.newPage();
             await page.goto(url);
+
             if (Array.isArray(selector)) {
+                const selectors = [];
                 for (const sel of selector) {
-                    await page.waitForSelector(sel.selector);
+                    try {
+                        await page.waitForSelector(sel.selector, { timeout: 5000 });
+                        selectors.push(sel);
+                    } catch (err) {
+                        // do not add selector that is not available
+                    }
                 }
+                selector = selectors;
             } else {
-                await page.waitForSelector(selector);
+                try {
+                    await page.waitForSelector(selector);
+                } catch (err) {
+                    selector = null;
+                }
             }
 
-            const result = await page.evaluate(evalFunc, selector);
-            await browser.close();
-            return result;
+            if (selector) {
+                const result = await page.evaluate(evalFunc, selector);
+                await browser.close();
+                return result;
+            } else {
+                error = 'selector not available';
+            }
         }
 
         return {
