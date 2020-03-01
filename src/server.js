@@ -38,6 +38,7 @@ console.log(`Listening on http://localhost:${port}`);
 
 // Setup routes
 router
+    .post('/scrape', async (req, res) => await container.cradle.puppeteerController.scrape(req, res))
     .get('/scrape/text', async (req, res) => await container.cradle.puppeteerController.scrapeText(req, res))
     .get('/scrape/html', async (req, res) => await container.cradle.puppeteerController.scrapeHtml(req, res))
     .get('/scrape/link', async (req, res) => await container.cradle.puppeteerController.scrapeLink(req, res));
