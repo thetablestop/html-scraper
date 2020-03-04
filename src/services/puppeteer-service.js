@@ -23,7 +23,13 @@ export class PuppeteerService {
 
         if (browser && url && evalFunc) {
             const page = await browser.newPage();
-            await page.goto(url);
+            try {
+                await page.goto(url);
+            } catch (err) {
+                return {
+                    error: `Unable to navigate to ${url}: ${err}`
+                };
+            }
 
             if (Array.isArray(selector)) {
                 const selectors = [];
